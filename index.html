@@ -9,20 +9,20 @@
     <style>
         /* Define CSS Custom Properties for dynamic theming */
         :root {
-            --body-bg-start: #2196F3; /* Default Blue */
-            --body-bg-end: #1565C0;   /* Default Dark Blue */
-            --container-bg-start: #e3f2fd;
-            --container-bg-end: #bbdefb;
-            --accent-color: #2196F3;
-            --social-copy-bg: #90CAF9;
-            --social-copy-text: #1976D2;
-            --copy-button-bg: #42A5F5;
-            --copy-button-hover-bg: #2196F3;
-            --download-button-start: #2196F3;
-            --download-button-end: #1565C0;
-            --download-button-hover-start: #1565C0;
-            --download-button-hover-end: #2196F3;
-            --icon-color: #2196F3;
+            --body-bg-start: #E53935; /* Default Red */
+            --body-bg-end: #B71C1C;   /* Default Dark Red */
+            --container-bg-start: #ffebee;
+            --container-bg-end: #ffcdd2;
+            --accent-color: #E53935;
+            --social-copy-bg: #f8bbd0;
+            --social-copy-text: #C62828;
+            --copy-button-bg: #EF5350;
+            --copy-button-hover-bg: #E53935;
+            --download-button-start: #E53935;
+            --download-button-end: #B71C1C;
+            --download-button-hover-start: #B71C1C;
+            --download-button-hover-end: #E53935;
+            --icon-color: #E53935;
         }
 
         /* Custom styles for Inter font and general body */
@@ -154,25 +154,6 @@
             color: #ffffff;
         }
 
-        /* Floating logo styling */
-        .floating-logo {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            border: 3px solid var(--container-bg-start); /* Logo border matches container light color */
-            cursor: pointer; /* Indicate it's clickable */
-            transition: transform 0.3s ease-in-out, border-color 0.5s ease;
-        }
-        .floating-logo:hover {
-            transform: scale(1.05);
-        }
-
         /* Responsive adjustments for smaller screens */
         @media (max-width: 600px) {
             .language-toggle {
@@ -181,12 +162,6 @@
                 padding: 6px 10px;
                 font-size: 12px;
             }
-            .floating-logo {
-                top: 10px;
-                left: 10px;
-                width: 50px;
-                height: 50px;
-            }
             .vcard-container {
                 padding: 20px;
             }
@@ -194,8 +169,6 @@
     </style>
 </head>
 <body>
-    <img id="restaurantLogo" class="floating-logo" src="https://github.com/omarfreejswaeleh/freejswaelehrestaurant/blob/main/images/logo.jpeg?raw=true" alt="Restaurant Logo">
-
     <div class="vcard-container">
         <button id="languageToggle" class="language-toggle">العربية</button>
 
@@ -278,17 +251,7 @@
 
         // Define multiple color themes
         const themes = [
-            {   // Blue Theme (Now Default)
-                bodyBgStart: '#2196F3', bodyBgEnd: '#1565C0',
-                containerBgStart: '#e3f2fd', containerBgEnd: '#bbdefb',
-                accentColor: '#2196F3',
-                socialCopyBg: '#90CAF9', socialCopyText: '#1976D2',
-                copyButtonBg: '#42A5F5', copyButtonHoverBg: '#2196F3',
-                downloadButtonStart: '#2196F3', downloadButtonEnd: '#1565C0',
-                downloadButtonHoverStart: '#1565C0', downloadButtonHoverEnd: '#2196F3',
-                iconColor: '#2196F3'
-            },
-            {   // Red Theme
+            {   // Red Theme (Now Default)
                 bodyBgStart: '#E53935', bodyBgEnd: '#B71C1C',
                 containerBgStart: '#ffebee', containerBgEnd: '#ffcdd2',
                 accentColor: '#E53935',
@@ -297,6 +260,16 @@
                 downloadButtonStart: '#E53935', downloadButtonEnd: '#B71C1C',
                 downloadButtonHoverStart: '#B71C1C', downloadButtonHoverEnd: '#E53935',
                 iconColor: '#E53935'
+            },
+            {   // Blue Theme
+                bodyBgStart: '#2196F3', bodyBgEnd: '#1565C0',
+                containerBgStart: '#e3f2fd', containerBgEnd: '#bbdefb',
+                accentColor: '#2196F3',
+                socialCopyBg: '#90CAF9', socialCopyText: '#1976D2',
+                copyButtonBg: '#42A5F5', copyButtonHoverBg: '#2196F3',
+                downloadButtonStart: '#2196F3', downloadButtonEnd: '#1565C0',
+                downloadButtonHoverStart: '#1565C0', downloadButtonHoverEnd: '#2196F3',
+                iconColor: '#2196F3'
             },
             {   // Purple Theme
                 bodyBgStart: '#9C27B0', bodyBgEnd: '#6A1B9A',
@@ -461,15 +434,12 @@ END:VCARD`;
             updateContent();
         });
 
-        // Event listener for logo click to change theme
-        document.getElementById('restaurantLogo').addEventListener('click', applyRandomTheme);
-
         // Initial profile picture load (remains static)
         document.getElementById('profilePic').src = "https://github.com/omarfreejswaeleh/freejswaelehrestaurant/blob/main/images/1.png?raw=true";
 
-        // Apply the default theme (blue) on initial load
+        // Apply the default theme (red) on initial load
         const root = document.documentElement;
-        const defaultTheme = themes[0]; // Blue theme is at index 0
+        const defaultTheme = themes[0]; // Red theme is now at index 0
         root.style.setProperty('--body-bg-start', defaultTheme.bodyBgStart);
         root.style.setProperty('--body-bg-end', defaultTheme.bodyBgEnd);
         root.style.setProperty('--container-bg-start', defaultTheme.containerBgStart);
