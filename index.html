@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Digital vCard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Define CSS Custom Properties for dynamic theming */
+        :root {
+            --body-bg-start: #2196F3; /* Default Blue */
+            --body-bg-end: #1565C0;   /* Default Dark Blue */
+            --container-bg-start: #e3f2fd;
+            --container-bg-end: #bbdefb;
+            --accent-color: #2196F3;
+            --social-copy-bg: #90CAF9;
+            --social-copy-text: #1976D2;
+            --copy-button-bg: #42A5F5;
+            --copy-button-hover-bg: #2196F3;
+            --download-button-start: #2196F3;
+            --download-button-end: #1565C0;
+            --download-button-hover-start: #1565C0;
+            --download-button-hover-end: #2196F3;
+            --icon-color: #2196F3;
+        }
+
+        /* Custom styles for Inter font and general body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--body-bg-start) 0%, var(--body-bg-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: background 0.5s ease; /* Smooth transition for background changes */
+        }
+        .vcard-container {
+            background: linear-gradient(180deg, var(--container-bg-start) 0%, var(--container-bg-end) 100%);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2),
+                        0 0 0 5px rgba(255, 255, 255, 0.3) inset;
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: background 0.5s ease; /* Smooth transition for container background */
+        }
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--accent-color); /* Uses accent color */
+            margin: 0 auto 20px;
+            display: block;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+            transition: border-color 0.5s ease; /* Smooth transition for border color */
+        }
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background-color: var(--social-copy-bg);
+            color: var(--social-copy-text);
+            border-radius: 50%;
+            font-size: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .social-link:hover {
+            background-color: var(--social-copy-text); /* Darker color on hover */
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .copy-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            background-color: var(--copy-button-bg);
+            color: #ffffff;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-left: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .copy-button:hover {
+            background-color: var(--copy-button-hover-bg);
+            transform: translateY(-1px);
+        }
+        .message-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 1000;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+        /* Style for the download button */
+        #downloadVcardBtn {
+            background: linear-gradient(45deg, var(--download-button-start), var(--download-button-end));
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+            transition: background 0.5s ease, box-shadow 0.3s ease;
+        }
+        #downloadVcardBtn:hover {
+            background: linear-gradient(45deg, var(--download-button-hover-start), var(--download-button-hover-end));
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        /* Icon color for contact details */
+        .contact-icon { /* New class for icons to use CSS variable */
+            color: var(--icon-color);
+            transition: color 0.5s ease;
+        }
+
+        /* Language toggle button styling */
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--social-copy-bg);
+            color: var(--social-copy-text);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .language-toggle:hover {
+            background-color: var(--social-copy-text);
+            color: #ffffff;
+        }
+
+        /* Floating logo styling */
+        .floating-logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            border: 3px solid var(--container-bg-start); /* Logo border matches container light color */
+            cursor: pointer; /* Indicate it's clickable */
+            transition: transform 0.3s ease-in-out, border-color 0.5s ease;
+        }
+        .floating-logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 600px) {
+            .language-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            .floating-logo {
+                top: 10px;
+                left: 10px;
+                width: 50px;
+                height: 50px;
+            }
+            .vcard-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img id="restaurantLogo" class="floating-logo" src="https://github.com/freejswaeleh/omar/blob/main/images/logo.jpeg?raw=true" alt="Restaurant Logo">
+
+    <div class="vcard-container">
+        <button id="languageToggle" class="language-toggle">العربية</button>
+
+        <img id="profilePic" class="profile-picture" src="https://github.com/freejswaeleh/omar/blob/main/images/1.png?raw=true" alt="Profile Picture">
+
+        <h1 id="fullName" class="text-2xl font-bold text-gray-800 mb-2">Omar Hamdan Mohammed Alazmi</h1>
+        <p id="positionText" class="text-xl text-gray-600 mb-1">CEO</p>
+        <p id="companyName" class="text-lg text-gray-500 mb-6">Freej Swaeleh Restaurant</p>
+
+        <div class="space-y-4 mb-8 text-gray-700 text-left">
+            <div class="flex items-center">
+                <i class="fas fa-phone-alt contact-icon w-6"></i>
+                <span id="phoneNumber" class="ml-3">+965 9971 5648</span>
+                <span class="copy-button" data-copy="phone"><i class="fas fa-copy"></i></span>
+            </div>
+            <div class="flex items-center">
+                <i class="fas fa-envelope contact-icon w-6"></i>
+                <span id="emailAddress" class="ml-3">omar@freejswaeleh.com</span>
+                <span class="copy-button" data-copy="email"><i class="fas fa-copy"></i></span>
+            </div>
+            <div class="flex items-center">
+                <i class="fas fa-globe contact-icon w-6"></i>
+                <a id="websiteUrl" href="https://freej-swaeleh.com/" target="_blank" class="ml-3 contact-icon hover:underline">freej-swaeleh.com</a>
+            </div>
+            <div class="flex items-center">
+                <i class="fas fa-map-marker-alt contact-icon w-6"></i>
+                <span id="address" class="ml-3">Kuwait, London, Riyadh</span>
+            </div>
+        </div>
+
+        <button id="downloadVcardBtn" class="w-full text-white font-bold py-3 px-6 rounded-xl transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity50">
+            <i class="fas fa-user-plus mr-2"></i> <span id="addContactText">Add Contact</span>
+        </button>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+
+    <script>
+        // Language data
+        const translations = {
+            en: {
+                firstName: "Omar",
+                lastName: "Alazmi",
+                fullName: "Omar Hamdan Mohammed Alazmi",
+                position: "CEO",
+                organization: "Freej Swaeleh Restaurant",
+                phoneNumber: "+965 9971 5648",
+                email: "omar@freejswaeleh.com",
+                website: "https://freej-swaeleh.com/",
+                address: "Kuwait;London;Riyadh",
+                addContact: "Add Contact",
+                phoneCopied: "Phone number copied!",
+                emailCopied: "Email address copied!",
+                addressCopied: "Address copied!",
+                vCardDownloaded: "vCard downloaded!",
+                failedToCopy: "Failed to copy!",
+                languageToggleText: "العربية"
+            },
+            ar: {
+                firstName: "عمر",
+                lastName: "العازمي",
+                fullName: "عمر حمدان محمد العازمي",
+                position: "الرئيس التنفيذي",
+                organization: "مطعم فريج سواله",
+                phoneNumber: "+٩٦٥ ٩٩٧١ ٥٦٤٨",
+                email: "omar@freejswaeleh.com",
+                website: "https://freej-swaeleh.com/",
+                address: "الكويت;لندن;الرياض",
+                addContact: "إضافة جهة اتصال",
+                phoneCopied: "تم نسخ رقم الهاتف!",
+                emailCopied: "تم نسخ البريد الإلكتروني!",
+                addressCopied: "تم نسخ العنوان!",
+                vCardDownloaded: "تم تنزيل بطاقة العمل!",
+                failedToCopy: "فشل النسخ!",
+                languageToggleText: "English"
+            }
+        };
+
+        let currentLanguage = 'en'; // Default language
+
+        // Define multiple color themes
+        const themes = [
+            {   // Blue Theme (Now Default)
+                bodyBgStart: '#2196F3', bodyBgEnd: '#1565C0',
+                containerBgStart: '#e3f2fd', containerBgEnd: '#bbdefb',
+                accentColor: '#2196F3',
+                socialCopyBg: '#90CAF9', socialCopyText: '#1976D2',
+                copyButtonBg: '#42A5F5', copyButtonHoverBg: '#2196F3',
+                downloadButtonStart: '#2196F3', downloadButtonEnd: '#1565C0',
+                downloadButtonHoverStart: '#1565C0', downloadButtonHoverEnd: '#2196F3',
+                iconColor: '#2196F3'
+            },
+            {   // Red Theme
+                bodyBgStart: '#E53935', bodyBgEnd: '#B71C1C',
+                containerBgStart: '#ffebee', containerBgEnd: '#ffcdd2',
+                accentColor: '#E53935',
+                socialCopyBg: '#f8bbd0', socialCopyText: '#C62828',
+                copyButtonBg: '#EF5350', copyButtonHoverBg: '#E53935',
+                downloadButtonStart: '#E53935', downloadButtonEnd: '#B71C1C',
+                downloadButtonHoverStart: '#B71C1C', downloadButtonHoverEnd: '#E53935',
+                iconColor: '#E53935'
+            },
+            {   // Purple Theme
+                bodyBgStart: '#9C27B0', bodyBgEnd: '#6A1B9A',
+                containerBgStart: '#f3e5f5', containerBgEnd: '#e1bee7',
+                accentColor: '#9C27B0',
+                socialCopyBg: '#CE93D8', socialCopyText: '#7B1FA2',
+                copyButtonBg: '#AB47BC', copyButtonHoverBg: '#9C27B0',
+                downloadButtonStart: '#9C27B0', downloadButtonEnd: '#6A1B9A',
+                downloadButtonHoverStart: '#6A1B9A', downloadButtonHoverEnd: '#9C27B0',
+                iconColor: '#9C27B0'
+            },
+            {   // Green Theme
+                bodyBgStart: '#4CAF50', bodyBgEnd: '#2E7D32',
+                containerBgStart: '#e8f5e9', containerBgEnd: '#dcedc8',
+                accentColor: '#4CAF50',
+                socialCopyBg: '#A5D6A7', socialCopyText: '#388E3C',
+                copyButtonBg: '#66BB6A', copyButtonHoverBg: '#4CAF50',
+                downloadButtonStart: '#4CAF50', downloadButtonEnd: '#2E7D32',
+                downloadButtonHoverStart: '#2E7D32', downloadButtonHoverEnd: '#4CAF50',
+                iconColor: '#4CAF50'
+            }
+        ];
+
+        // Function to apply a random theme
+        function applyRandomTheme() {
+            const randomIndex = Math.floor(Math.random() * themes.length);
+            const selectedTheme = themes[randomIndex];
+            const root = document.documentElement;
+
+            root.style.setProperty('--body-bg-start', selectedTheme.bodyBgStart);
+            root.style.setProperty('--body-bg-end', selectedTheme.bodyBgEnd);
+            root.style.setProperty('--container-bg-start', selectedTheme.containerBgStart);
+            root.style.setProperty('--container-bg-end', selectedTheme.containerBgEnd);
+            root.style.setProperty('--accent-color', selectedTheme.accentColor);
+            root.style.setProperty('--social-copy-bg', selectedTheme.socialCopyBg);
+            root.style.setProperty('--social-copy-text', selectedTheme.socialCopyText);
+            root.style.setProperty('--copy-button-bg', selectedTheme.copyButtonBg);
+            root.style.setProperty('--copy-button-hover-bg', selectedTheme.copyButtonHoverBg);
+            root.style.setProperty('--download-button-start', selectedTheme.downloadButtonStart);
+            root.style.setProperty('--download-button-end', selectedTheme.downloadButtonEnd);
+            root.style.setProperty('--download-button-hover-start', selectedTheme.downloadButtonHoverStart);
+            root.style.setProperty('--download-button-hover-end', selectedTheme.downloadButtonHoverEnd);
+            root.style.setProperty('--icon-color', selectedTheme.iconColor);
+        }
+
+        // Function to update content based on language
+        function updateContent() {
+            const langData = translations[currentLanguage];
+
+            // Update main vCard data
+            document.getElementById('fullName').textContent = langData.fullName;
+            document.getElementById('positionText').textContent = langData.position;
+            document.getElementById('companyName').textContent = langData.organization;
+            document.getElementById('phoneNumber').textContent = langData.phoneNumber;
+            document.getElementById('emailAddress').textContent = langData.email;
+            document.getElementById('websiteUrl').href = langData.website;
+            document.getElementById('websiteUrl').textContent = langData.website.replace(/(^\w+:|^)\/\//, '');
+            document.getElementById('address').textContent = langData.address.replace(/;/g, ', ');
+            document.getElementById('addContactText').textContent = langData.addContact;
+            document.getElementById('languageToggle').textContent = langData.languageToggleText;
+
+            // Adjust text direction for Arabic
+            if (currentLanguage === 'ar') {
+                document.body.style.direction = 'rtl';
+                document.getElementById('fullName').classList.add('rtl');
+                document.getElementById('positionText').classList.add('rtl');
+                document.getElementById('companyName').classList.add('rtl');
+                document.querySelector('.space-y-4').classList.remove('text-left');
+                document.querySelector('.space-y-4').classList.add('text-right');
+            } else {
+                document.body.style.direction = 'ltr';
+                document.getElementById('fullName').classList.remove('rtl');
+                document.getElementById('positionText').classList.remove('rtl');
+                document.getElementById('companyName').classList.remove('rtl');
+                document.querySelector('.space-y-4').classList.remove('text-right');
+                document.querySelector('.space-y-4').classList.add('text-left');
+            }
+        }
+
+        // Initial content load
+        updateContent();
+
+        // Function to show a temporary message
+        function showMessage(message) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 2000); // Message disappears after 2 seconds
+        }
+
+        // Copy to clipboard functionality
+        document.querySelectorAll('.copy-button').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const type = event.currentTarget.dataset.copy;
+                let textToCopy = '';
+                let message = '';
+                const langData = translations[currentLanguage];
+
+                switch (type) {
+                    case 'phone':
+                        textToCopy = translations.en.phoneNumber; // Always copy English number for consistency
+                        message = langData.phoneCopied;
+                        break;
+                    case 'email':
+                        textToCopy = translations.en.email; // Always copy English email
+                        message = langData.emailCopied;
+                        break;
+                    case 'address':
+                        textToCopy = translations.en.address.replace(/;/g, ', '); // Always copy English address
+                        message = langData.addressCopied;
+                        break;
+                }
+
+                const tempInput = document.createElement('textarea');
+                tempInput.value = textToCopy;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                try {
+                    document.execCommand('copy');
+                    showMessage(message);
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    showMessage(langData.failedToCopy);
+                }
+                document.body.removeChild(tempInput);
+            });
+        });
+
+        // Function to generate and download vCard
+        document.getElementById('downloadVcardBtn').addEventListener('click', () => {
+            const langData = translations[currentLanguage];
+            const vCardDataForDownload = translations.en; // Use English data for vCard file content
+
+            const vcardContent = `BEGIN:VCARD
+VERSION:3.0
+FN:${vCardDataForDownload.fullName}
+N:${vCardDataForDownload.lastName};${vCardDataForDownload.firstName};;
+ORG:${vCardDataForDownload.organization}
+TEL;TYPE=CELL:${vCardDataForDownload.phoneNumber}
+EMAIL;TYPE=INTERNET:${vCardDataForDownload.email}
+URL:${vCardDataForDownload.website}
+ADR;TYPE=WORK:;;${vCardDataForDownload.address}
+END:VCARD`;
+
+            const blob = new Blob([vcardContent], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${vCardDataForDownload.firstName}_${vCardDataForDownload.lastName}.vcf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showMessage(langData.vCardDownloaded);
+        });
+
+        // Language toggle event listener
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            currentLanguage = currentLanguage === 'en' ? 'ar' : 'en';
+            updateContent();
+        });
+
+        // Event listener for logo click to change theme
+        document.getElementById('restaurantLogo').addEventListener('click', applyRandomTheme);
+
+        // Initial profile picture load (remains static)
+        document.getElementById('profilePic').src = "https://github.com/freejswaeleh/omar/blob/main/images/1.png?raw=true";
+
+        // Apply the default theme (blue) on initial load
+        const root = document.documentElement;
+        const defaultTheme = themes[0]; // Blue theme is at index 0
+        root.style.setProperty('--body-bg-start', defaultTheme.bodyBgStart);
+        root.style.setProperty('--body-bg-end', defaultTheme.bodyBgEnd);
+        root.style.setProperty('--container-bg-start', defaultTheme.containerBgStart);
+        root.style.setProperty('--container-bg-end', defaultTheme.containerBgEnd);
+        root.style.setProperty('--accent-color', defaultTheme.accentColor);
+        root.style.setProperty('--social-copy-bg', defaultTheme.socialCopyBg);
+        root.style.setProperty('--social-copy-text', defaultTheme.socialCopyText);
+        root.style.setProperty('--copy-button-bg', defaultTheme.copyButtonBg);
+        root.style.setProperty('--copy-button-hover-bg', defaultTheme.copyButtonHoverBg);
+        root.style.setProperty('--download-button-start', defaultTheme.downloadButtonStart);
+        root.style.setProperty('--download-button-end', defaultTheme.downloadButtonEnd);
+        root.style.setProperty('--download-button-hover-start', defaultTheme.downloadButtonHoverStart);
+        root.style.setProperty('--download-button-hover-end', defaultTheme.downloadButtonHoverEnd);
+        root.style.setProperty('--icon-color', defaultTheme.iconColor);
+    </script>
+</body>
+</html>
