@@ -9,20 +9,20 @@
     <style>
         /* Define CSS Custom Properties for dynamic theming */
         :root {
-            --body-bg-start: #E53935; /* Default Red */
-            --body-bg-end: #B71C1C;   /* Default Dark Red */
-            --container-bg-start: #ffebee;
-            --container-bg-end: #ffcdd2;
-            --accent-color: #E53935;
-            --social-copy-bg: #f8bbd0;
-            --social-copy-text: #C62828;
-            --copy-button-bg: #EF5350;
-            --copy-button-hover-bg: #E53935;
-            --download-button-start: #E53935;
-            --download-button-end: #B71C1C;
-            --download-button-hover-start: #B71C1C;
-            --download-button-hover-end: #E53935;
-            --icon-color: #E53935;
+            --body-bg-start: #4CAF50; /* Default Green */
+            --body-bg-end: #2E7D32;   /* Default Dark Green */
+            --container-bg-start: #e8f5e9;
+            --container-bg-end: #dcedc8;
+            --accent-color: #4CAF50;
+            --social-copy-bg: #A5D6A7;
+            --social-copy-text: #388E3C;
+            --copy-button-bg: #66BB6A;
+            --copy-button-hover-bg: #4CAF50;
+            --download-button-start: #4CAF50;
+            --download-button-end: #2E7D32;
+            --download-button-hover-start: #2E7D32;
+            --download-button-hover-end: #4CAF50;
+            --icon-color: #4CAF50;
         }
 
         /* Custom styles for Inter font and general body */
@@ -174,7 +174,7 @@
 
         <img id="profilePic" class="profile-picture" src="https://github.com/omarfreejswaeleh/freejswaelehrestaurant/blob/main/images/1.png?raw=true" alt="Profile Picture">
 
-        <h1 id="fullName" class="text-2xl font-bold text-gray-800 mb-2">Omar Hamdan Mohammad Alazmi</h1>
+        <h1 id="fullName" class="text-2xl font-bold text-gray-800 mb-2">Omar Hamdan Mohammed Alazmi</h1>
         <p id="positionText" class="text-xl text-gray-600 mb-1">CEO</p>
         <p id="companyName" class="text-lg text-gray-500 mb-6">Freej Swaeleh Restaurant</p>
 
@@ -212,7 +212,7 @@
             en: {
                 firstName: "Omar",
                 lastName: "Alazmi",
-                fullName: "Omar Hamdan Mohammad Alazmi",
+                fullName: "Omar Hamdan Mohammed Alazmi",
                 position: "CEO",
                 organization: "Freej Swaeleh Restaurant",
                 phoneNumber: "+965 9971 5648",
@@ -251,7 +251,17 @@
 
         // Define multiple color themes
         const themes = [
-            {   // Red Theme (Now Default)
+            {   // Green Theme (Now Default)
+                bodyBgStart: '#4CAF50', bodyBgEnd: '#2E7D32',
+                containerBgStart: '#e8f5e9', containerBgEnd: '#dcedc8',
+                accentColor: '#4CAF50',
+                socialCopyBg: '#A5D6A7', socialCopyText: '#388E3C',
+                copyButtonBg: '#66BB6A', copyButtonHoverBg: '#4CAF50',
+                downloadButtonStart: '#4CAF50', downloadButtonEnd: '#2E7D32',
+                downloadButtonHoverStart: '#2E7D32', downloadButtonHoverEnd: '#4CAF50',
+                iconColor: '#4CAF50'
+            },
+            {   // Red Theme
                 bodyBgStart: '#E53935', bodyBgEnd: '#B71C1C',
                 containerBgStart: '#ffebee', containerBgEnd: '#ffcdd2',
                 accentColor: '#E53935',
@@ -280,16 +290,6 @@
                 downloadButtonStart: '#9C27B0', downloadButtonEnd: '#6A1B9A',
                 downloadButtonHoverStart: '#6A1B9A', downloadButtonHoverEnd: '#9C27B0',
                 iconColor: '#9C27B0'
-            },
-            {   // Green Theme
-                bodyBgStart: '#4CAF50', bodyBgEnd: '#2E7D32',
-                containerBgStart: '#e8f5e9', containerBgEnd: '#dcedc8',
-                accentColor: '#4CAF50',
-                socialCopyBg: '#A5D6A7', socialCopyText: '#388E3C',
-                copyButtonBg: '#66BB6A', copyButtonHoverBg: '#4CAF50',
-                downloadButtonStart: '#4CAF50', downloadButtonEnd: '#2E7D32',
-                downloadButtonHoverStart: '#2E7D32', downloadButtonHoverEnd: '#4CAF50',
-                iconColor: '#4CAF50'
             }
         ];
 
@@ -434,12 +434,16 @@ END:VCARD`;
             updateContent();
         });
 
+        // Event listener for logo click to change theme
+        // Removed logo, so this event listener is no longer attached to an element.
+        // document.getElementById('restaurantLogo').addEventListener('click', applyRandomTheme);
+
         // Initial profile picture load (remains static)
         document.getElementById('profilePic').src = "https://github.com/omarfreejswaeleh/freejswaelehrestaurant/blob/main/images/1.png?raw=true";
 
-        // Apply the default theme (red) on initial load
+        // Apply the default theme (green) on initial load
         const root = document.documentElement;
-        const defaultTheme = themes[0]; // Red theme is now at index 0
+        const defaultTheme = themes[0]; // Green theme is now at index 0
         root.style.setProperty('--body-bg-start', defaultTheme.bodyBgStart);
         root.style.setProperty('--body-bg-end', defaultTheme.bodyBgEnd);
         root.style.setProperty('--container-bg-start', defaultTheme.containerBgStart);
@@ -457,4 +461,3 @@ END:VCARD`;
     </script>
 </body>
 </html>
-
